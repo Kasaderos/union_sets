@@ -6,26 +6,25 @@
 #include <algorithm>
 using namespace std;
 
-const int N = 5;
+const int N = 8;
 const int SIZE = N * N;
 /*
-	|0 |1 |2 |3 |4 |
-	|5 |6 |7 |8 |9 |
-	|  |  |  |  |  |
-	|  |  |  |  |  |
-	|  |  |  |  |24|
-
-	walls
-	   0
-	 3   1
-	   2
+|0 |1 |2 |3 |4 |
+|5 |6 |7 |8 |9 |
+|  |  |  |  |  |
+|  |  |  |  |  |
+|  |  |  |  |24|
+walls
+0
+3   1
+2
 */
 
 bool check(Disj & lab);
 void unite(Disj & lab, int num, int pos);
 int main(int argc, char **argv) {
 	srand((unsigned)time(NULL));// randomize
-	Disj lab(N); 
+	Disj lab(SIZE);
 	vector <int> v;
 	int p = 0;
 	for (int i = 0; i < SIZE; i++)
@@ -37,24 +36,21 @@ int main(int argc, char **argv) {
 			cout << "success" << endl;
 			break;
 		}
-		if (i >= SIZE)
-			i = 0;
+		if (i == SIZE) i = 0;
 		int pos = rand() % 4; //генерация позиции стены 
-		//выбрали стену
-		//приступаем к уничтожении
+							  //выбрали стену
+							  //приступаем к уничтожении
+		cout << "wall pos : " << pos << " ";
 		unite(lab, v[i], pos);
 		i++;
 	}
-	//mark();
-	
+	lab.print();
 	getchar();
 	return 0;
 }
 
 bool check(Disj & lab) {
-	if (lab.find(0) == lab.find(24))
-		return true;
-	return false;
+	return (lab.find(0) == lab.find(SIZE - 1));
 }
 
 void unite(Disj & lab, int num, int pos) {

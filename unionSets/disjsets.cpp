@@ -2,12 +2,17 @@
 #include <iostream>
 using namespace std;
 
-Disj::Disj(int n) : size(n), p(n*n), rank(n*n) {
-	for (int i = 0; i < p.size(); i++) {
+Disj::Disj(int n) : size(n), p(n), rank(n) {
+	for (unsigned i = 0; i < p.size(); i++) {
 		p[i] = i;
 		rank[i] = 0;
 	}
+	visit = new int[n];
 }
+Disj::~Disj() {
+	delete[] visit;
+}
+
 
 void Disj::make_set(int x) {
 	p[x] = x;
@@ -18,7 +23,7 @@ void Disj::unite(int x, int y) { // в случае если ранг(x) >= ра
 	y = find(y);
 	if (x == y)
 		return;
-	if (rank[x] < rank[y])
+	else if (rank[x] < rank[y])
 		p[x] = y;
 	else
 	{
@@ -33,22 +38,30 @@ int Disj::find(int x) {
 	return p[x] = find(p[x]);
 }
 
-//void Disj::dfs(int s, int visit[][size]);
+bool Disj::find2(int x) {
+	if (x == 0) return true;
+	if (p[x] == x && x != 0)
+		return false;
+	return find2(p[x]);
+}
+void Disj::dfs(int v, int s) {
+	for (int i = v; i < size; i++) {
+		if (!visit[i] && find(i) == find(v))
+			visit[i] = s;
+	}
+}
 void Disj::print() {
-	//int visit[size][size];
-	//for (int i = 0; i < SIZE; i++) {
-		//dfs(i, visit);
-	//}
-	/*for (int num = 1; num < p.size(); num++) {
-		//if (num - N >= 0) {
-		//}	0
-		if (num % N < N - 1) { 
-			if (find(num - 1) == find(num))
-				;
-		}
-		if (num + N < SIZE) {		
-		}
-		//if (num % N > 0) {
-		//} 3
-	}*/
+	for (int i = 0; i < size; i++)
+		visit[i] = 0;
+	int s = 1;
+	for (int i = 0; i < size; i++) {
+		dfs(i, s);
+		s++;
+	}
+	int n = (int)sqrt(size);
+	for (int i = 0; i < size; i++) {
+		if (i % n == 0)
+			cout << endl;
+		cout << " " << visit[i];
+	}
 }
